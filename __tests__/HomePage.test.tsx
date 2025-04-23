@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import HomePage from "../src/pages/HomePage";
 import { useNotesStore } from "../src/store/useNotesStore";
+import React from "react";
 
 // Mock Zustand store
 jest.mock("../src/store/useNotesStore", () => ({
