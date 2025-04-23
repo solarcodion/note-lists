@@ -58,7 +58,7 @@ Start the Backend: Run the backend server:
 npm run dev:backend
 ```
 
-The backend will start on http://localhost:5000.
+The backend will start on http://localhost:5200.
 
 Start the Frontend: Run the frontend development server:
 ```bash
