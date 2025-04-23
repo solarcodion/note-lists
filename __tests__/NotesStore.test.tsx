@@ -2,9 +2,8 @@ import axios from "axios";
 import { act } from "react";
 import { useNotesStore } from "../src/store/useNotesStore";
 
-jest.mock("axios", () => ({
-  get: jest.fn(),
-}));
+jest.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe("useNotesStore", () => {
   const mockNotes = [
@@ -12,7 +11,10 @@ describe("useNotesStore", () => {
   ];
 
   beforeEach(() => {
-    (axios.get as jest.Mock).mockResolvedValue({
+    // Reset the store state before each test
+    useNotesStore.setState({ notes: [], totalCount: 0, note: null });
+    
+    mockedAxios.get.mockResolvedValue({
       data: {
         notes: mockNotes,
         totalCount: 1,
@@ -25,11 +27,13 @@ describe("useNotesStore", () => {
   });
 
   it("fetches notes and updates the store", async () => {
-    const store = useNotesStore.getState();
     await act(async () => {
-      await store.fetchNotes();
+      await useNotesStore.getState().fetchNotes();
     });
 
-    expect(store.notes).toEqual(mockNotes);
+    // Get the latest state after the async operation
+    const updatedState = useNotesStore.getState();
+    expect(updatedState.notes).toEqual(mockNotes);
+    expect(mockedAxios.get).toHaveBeenCalledWith("/api/notes?limit=10&offset=0");
   });
 });
